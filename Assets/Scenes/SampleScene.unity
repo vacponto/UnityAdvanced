@@ -712,12 +712,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dee5efbdc16340449da8347254b5d0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
-  stepInterval: 0.7
-  groundCheckDistance: 1.1
+  groundCheckPoint: {fileID: 388998771}
+  groundCheckDistance: 0.2
   groundMask:
     serializedVersion: 2
     m_Bits: 64
+  speed: 1
+  stepInterval: 1.2
   footstepSoundPool: {fileID: 1748359164}
 --- !u!54 &1423092061
 Rigidbody:
@@ -826,9 +827,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 37c438c6eea0bdc40b0d6c0e25a28fe1, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 02fd8418229da28429c2099f9274a306, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.75
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
