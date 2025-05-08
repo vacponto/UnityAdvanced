@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class PlayerBehavior : MonoBehaviour
 {
+    [Header("Ground Check")]
+    public Transform groundCheckPoint;
+    public float groundCheckDistance = 0.2f;
+    public LayerMask groundMask;
+
     [Header("Movement Settings")]
     public float speed = 5f;
     public float stepInterval = 0.5f;
-    public float groundCheckDistance = 1.1f;
-    public LayerMask groundMask;
+
 
     [Header("Footsteps")]
     public FootstepSoundPool footstepSoundPool;
@@ -41,35 +45,42 @@ public class PlayerBehavior : MonoBehaviour
     {
         Vector3 moveDir = (transform.right * direction.x + transform.forward * direction.y).normalized;
         Vector3 velocity = moveDir * speed;
-        velocity.y = rb.velocity.y; 
+        velocity.y = rb.velocity.y;
         rb.velocity = velocity;
     }
 
     private void GroundCheck()
     {
-        Ray ray = new Ray(transform.position, Vector3.down);
-        isGrounded = Physics.Raycast(ray, groundCheckDistance, groundMask);
+        isGrounded = Physics.Raycast(groundCheckPoint.position, Vector3.down, groundCheckDistance, groundMask);
     }
 
     private void HandleFootsteps()
     {
+        bool hasInput = Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0;
         float movementSpeed = (transform.position - lastPosition).magnitude / Time.deltaTime;
         lastPosition = transform.position;
-        //Debug.Log(movementSpeed);
-        Debug.Log(isGrounded);
-        if (movementSpeed > 0.1f && isGrounded)
+
+        if (hasInput && isGrounded)
         {
             stepTimer += Time.deltaTime;
             if (stepTimer >= stepInterval)
             {
-                footstepSoundPool.PlayFootstep(transform.position);
+                footstepSoundPool.PlayFootstep(groundCheckPoint.position);
                 stepTimer = 0f;
             }
         }
         else
         {
             stepTimer = 0f;
-            Debug.Log("Reseting step timer");
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        if (groundCheckPoint != null)
+        {
+            Gizmos.color = isGrounded ? Color.green : Color.red;
+            Gizmos.DrawLine(groundCheckPoint.position, groundCheckPoint.position + Vector3.down * groundCheckDistance);
         }
     }
 }
