@@ -44,6 +44,7 @@ public class PlayerBehavior : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
+        // Initialize Input System
         playerInput = GetComponent<PlayerInput>();
         moveAction = playerInput.actions["Move"];
         lookAction = playerInput.actions["Look"];
@@ -57,6 +58,7 @@ public class PlayerBehavior : MonoBehaviour
         lastPosition = transform.position;
         cameraInitialPos = cameraTransform.localPosition;
 
+        // Enable input callbacks
         moveAction.performed += OnMovementInput;
         moveAction.canceled += OnMovementInput;
         lookAction.performed += OnLookInput;
