@@ -141,7 +141,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &55905872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -715,7 +715,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: fbd8e936ef9a19c488ebfd9de3559af8,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1036.9
+      value: 1005.16
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fbd8e936ef9a19c488ebfd9de3559af8,
         type: 3}
@@ -1034,6 +1034,9 @@ MonoBehaviour:
   bobSpeed: 10
   bobAmount: 0.05
   player: {fileID: 1423092065}
+  timer: 0
+  initialPos: {x: 0, y: 0, z: 0}
+  playerRb: {fileID: 0}
 --- !u!1 &388998770
 GameObject:
   m_ObjectHideFlags: 0
@@ -2279,6 +2282,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1072855505
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1072855506}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1072855506
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072855505}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1126985428
 GameObject:
   m_ObjectHideFlags: 0
@@ -2736,6 +2770,11 @@ MonoBehaviour:
     m_Bits: 64
   speed: 1
   stepInterval: 1.05
+  mouseSensitivity: 0.8
+  cameraTransform: {fileID: 330585546}
+  invertYLook: 0
+  bobSpeed: 10
+  bobAmount: 0.1
   footstepSoundPool: {fileID: 1748359164}
 --- !u!54 &1423092061
 Rigidbody:
@@ -2813,10 +2852,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 1423092059}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ef38b847039be540ac9253aac7e4762, type: 3}
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 2
+  m_Actions: {fileID: -944628639613478452, guid: 1de68e17bfd5911428451121c9bdd6c8,
+    type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1496947106
 GameObject:
   m_ObjectHideFlags: 0
@@ -3606,8 +3663,8 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 0.5943396, g: 0.58592916, b: 0.58592916, a: 1}
-  m_Intensity: 0.64
+  m_Color: {r: 0.379717, g: 0.4510436, b: 0.5, a: 1}
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -3650,7 +3707,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 16604
+  m_ColorTemperature: 17040
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -4283,3 +4340,4 @@ SceneRoots:
   - {fileID: 207009896}
   - {fileID: 1548808815}
   - {fileID: 745885609}
+  - {fileID: 1072855506}
