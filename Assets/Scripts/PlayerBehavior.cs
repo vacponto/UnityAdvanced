@@ -111,11 +111,13 @@ public class PlayerBehavior : MonoBehaviour
     private void GroundCheck()
     {
         isGrounded = Physics.Raycast(groundCheckPoint.position, Vector3.down, groundCheckDistance, groundMask);
+        Debug.Log("Grounded");
     }
 
     private void HandleFootsteps()
     {
-        bool isMoving = currentMovementInput.magnitude > 0.1f;
+
+        bool isMoving = (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0);
         float movementSpeed = (transform.position - lastPosition).magnitude / Time.deltaTime;
         lastPosition = transform.position;
 
@@ -124,7 +126,7 @@ public class PlayerBehavior : MonoBehaviour
             stepTimer += Time.deltaTime;
             if (stepTimer >= stepInterval)
             {
-                footstepSoundPool.PlayFootstep(groundCheckPoint.position);
+                footstepSoundPool.PlayFootstep(groundCheckPoint.position); 
                 stepTimer = 0f;
             }
         }
