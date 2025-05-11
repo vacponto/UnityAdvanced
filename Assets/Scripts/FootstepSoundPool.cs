@@ -34,6 +34,7 @@ public class FootstepSoundPool : MonoBehaviour
 
         AudioSource source = pool.Dequeue();
         source.transform.position = position;
+        source.pitch = Random.Range(1f, 1.3f);
         source.gameObject.SetActive(true);
         source.Play();
 
