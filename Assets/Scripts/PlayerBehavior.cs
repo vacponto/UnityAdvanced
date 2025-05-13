@@ -16,7 +16,7 @@ public class PlayerBehavior : MonoBehaviour
 
     [Header("Camera Settings")]
     public float mouseSensitivity = 2f;
-    public Transform cameraTransform; 
+    public Transform cameraTransform;
     public bool invertYLook = false;
 
     [Header("Head Bob Settings")]
@@ -44,7 +44,6 @@ public class PlayerBehavior : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
-        // Initialize Input System
         playerInput = GetComponent<PlayerInput>();
         moveAction = playerInput.actions["Move"];
         lookAction = playerInput.actions["Look"];
@@ -58,10 +57,10 @@ public class PlayerBehavior : MonoBehaviour
         lastPosition = transform.position;
         cameraInitialPos = cameraTransform.localPosition;
 
-        // Enable input callbacks
         moveAction.performed += OnMovementInput;
         moveAction.canceled += OnMovementInput;
         lookAction.performed += OnLookInput;
+        lookAction.canceled += OnLookInput;
     }
 
     void OnDisable()
@@ -69,6 +68,7 @@ public class PlayerBehavior : MonoBehaviour
         moveAction.performed -= OnMovementInput;
         moveAction.canceled -= OnMovementInput;
         lookAction.performed -= OnLookInput;
+        lookAction.canceled -= OnLookInput;
     }
 
     void Update()
@@ -95,9 +95,9 @@ public class PlayerBehavior : MonoBehaviour
 
         transform.Rotate(Vector3.up * lookInput.x * mouseSensitivity);
 
-        verticalRotation += lookInput.y * mouseSensitivity * (invertYLook ? 1 : -1);
-        verticalRotation = Mathf.Clamp(verticalRotation, -90f, 90f);
-        cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
+        //verticalRotation += lookInput.y * mouseSensitivity * (invertYLook ? 1 : -1);
+        //verticalRotation = Mathf.Clamp(verticalRotation, -90f, 90f);
+        //cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
     }
 
     private void Move(Vector2 direction)
@@ -126,7 +126,7 @@ public class PlayerBehavior : MonoBehaviour
             stepTimer += Time.deltaTime;
             if (stepTimer >= stepInterval)
             {
-                footstepSoundPool.PlayFootstep(groundCheckPoint.position); 
+                footstepSoundPool.PlayFootstep(groundCheckPoint.position);
                 stepTimer = 0f;
             }
         }

@@ -1,0 +1,63 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class GrabbableItem : MonoBehaviour, IInteractable
+{
+    [SerializeField] private string itemName = "Item";
+    [SerializeField] private Transform grabPosition;
+
+    public string InteractionPrompt => $"Press to grab the {itemName}";
+    public bool IsInteractable => true;
+
+
+    private bool isGrabbed = false;
+    private Transform originalParent;
+    private Vector3 originalPosition;
+
+    private void Start()
+    {
+        originalParent = transform.parent;
+        originalPosition = transform.position;
+    }
+
+    public void OnHover()
+    {
+        GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
+    }
+
+    public void OnUnhover()
+    {
+        GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
+    }
+
+    public void OnInteract()
+    {
+        if (isGrabbed)
+        {
+            ReleaseItem();
+        }
+        else
+        {
+            GrabItem();
+        }
+    }
+    
+    private void GrabItem()
+    {
+        isGrabbed = true;
+        transform.SetParent(grabPosition);
+        transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
+        transform.localPosition = Vector3.zero;
+        GetComponent<Rigidbody>().isKinematic = true;
+        GetComponent<Collider>().enabled = false;
+    }
+
+    private void ReleaseItem()
+    {
+        isGrabbed = false;
+        transform.SetParent(originalParent);
+        transform.position = originalPosition;
+        GetComponent<Rigidbody>().isKinematic = false;
+    }
+}
