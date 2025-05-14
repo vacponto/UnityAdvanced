@@ -95,9 +95,9 @@ public class PlayerBehavior : MonoBehaviour
 
         transform.Rotate(Vector3.up * lookInput.x * mouseSensitivity);
 
-        //verticalRotation += lookInput.y * mouseSensitivity * (invertYLook ? 1 : -1);
-        //verticalRotation = Mathf.Clamp(verticalRotation, -90f, 90f);
-        //cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
+        verticalRotation += lookInput.y * mouseSensitivity * (invertYLook ? 1 : -1);
+        verticalRotation = Mathf.Clamp(verticalRotation, -90f, 90f);
+        cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
     }
 
     private void Move(Vector2 direction)

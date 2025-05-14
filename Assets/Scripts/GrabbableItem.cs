@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GrabbableItem : MonoBehaviour, IInteractable
 {
@@ -14,21 +15,30 @@ public class GrabbableItem : MonoBehaviour, IInteractable
     private bool isGrabbed = false;
     private Transform originalParent;
     private Vector3 originalPosition;
+    private Outline outline;
 
     private void Start()
     {
         originalParent = transform.parent;
         originalPosition = transform.position;
+        outline = GetComponent<Outline>();
+        outline.enabled = false;
     }
 
     public void OnHover()
     {
-        GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
+        if (!outline.enabled)
+        {
+            outline.enabled = true; 
+        }
     }
 
     public void OnUnhover()
     {
-        GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
+        if (outline.enabled)
+        {
+            outline.enabled = false;
+        }
     }
 
     public void OnInteract()

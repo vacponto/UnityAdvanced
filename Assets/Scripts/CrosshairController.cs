@@ -8,13 +8,14 @@ public class CrosshairController : MonoBehaviour
     [SerializeField] private Image defaultCrosshair;  
     [SerializeField] private Image interactCrosshair;
     [SerializeField] private Text interactionText;
-    [SerializeField] private Color interactableColor = Color.green;
+    [SerializeField] private Color interactableTextColor = Color.white;
 
     private void Start()
     {
         defaultCrosshair.enabled = true;
         interactCrosshair.enabled = false;
         interactionText.text = "";
+        interactionText.color = interactableTextColor;
     }
 
     public void SetNormal()
@@ -29,5 +30,6 @@ public class CrosshairController : MonoBehaviour
         defaultCrosshair.enabled = false;
         interactCrosshair.enabled = true;
         interactionText.text = prompt;
+        interactionText.color = interactableTextColor;
     }
 }
