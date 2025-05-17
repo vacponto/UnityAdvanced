@@ -4073,7 +4073,7 @@ MonoBehaviour:
   onSliderValueChanged1:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1273601922}
+      - m_Target: {fileID: 2147466273}
         m_TargetAssemblyTypeName: SliderTextUpdater, Assembly-CSharp
         m_MethodName: UpdateText
         m_Mode: 0
@@ -4088,7 +4088,7 @@ MonoBehaviour:
   onSliderValueChanged2:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 689011130}
+      - m_Target: {fileID: 1273601922}
         m_TargetAssemblyTypeName: SliderTextUpdater, Assembly-CSharp
         m_MethodName: UpdateText
         m_Mode: 0
@@ -4103,7 +4103,7 @@ MonoBehaviour:
   onSliderValueChanged3:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1825172981}
+      - m_Target: {fileID: 689011130}
         m_TargetAssemblyTypeName: SliderTextUpdater, Assembly-CSharp
         m_MethodName: UpdateText
         m_Mode: 0
@@ -4118,7 +4118,7 @@ MonoBehaviour:
   onSliderValueChanged4:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2147466273}
+      - m_Target: {fileID: 1825172981}
         m_TargetAssemblyTypeName: SliderTextUpdater, Assembly-CSharp
         m_MethodName: UpdateText
         m_Mode: 0
@@ -4130,14 +4130,14 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  slider1: {fileID: 684926597}
-  slider2: {fileID: 491894004}
-  slider3: {fileID: 1751879258}
-  slider4: {fileID: 805158419}
-  sliderValueText1: {fileID: 1273601920}
-  sliderValueText2: {fileID: 689011128}
-  sliderValueText3: {fileID: 1825172979}
-  sliderValueText4: {fileID: 2147466274}
+  sliderSens: {fileID: 0}
+  sliderMV: {fileID: 0}
+  sliderBMV: {fileID: 0}
+  sliderSFXV: {fileID: 0}
+  sliderValueText1: {fileID: 2147466274}
+  sliderValueText2: {fileID: 1273601920}
+  sliderValueText3: {fileID: 689011128}
+  sliderValueText4: {fileID: 1825172979}
   format: 0
 --- !u!4 &855713054
 Transform:
@@ -6282,6 +6282,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetText: {fileID: 1273601920}
   format: 0
+--- !u!1 &1296395583
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1296395585}
+  - component: {fileID: 1296395584}
+  m_Layer: 0
+  m_Name: SaveGameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1296395584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296395583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46375fdb36559d54980fd16184c46b22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioMixer: {fileID: 24100000, guid: 539a9a899b983c546806f6429fe802cd, type: 2}
+  OnSettingsLoaded:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &1296395585
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296395583}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1506.0001, y: 658, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1321453872
 GameObject:
   m_ObjectHideFlags: 0
@@ -10775,3 +10823,4 @@ SceneRoots:
   - {fileID: 869746733}
   - {fileID: 1968780372}
   - {fileID: 855713054}
+  - {fileID: 1296395585}

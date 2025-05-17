@@ -61,6 +61,8 @@ public class PlayerBehavior : MonoBehaviour
         moveAction.canceled += OnMovementInput;
         lookAction.performed += OnLookInput;
         lookAction.canceled += OnLookInput;
+
+        mouseSensitivity = SaveGameSingleton.Instance.GameSettings.mouseSensitivity;
     }
 
     void OnDisable()
@@ -81,6 +83,11 @@ public class PlayerBehavior : MonoBehaviour
     void FixedUpdate()
     {
         Move(currentMovementInput);
+    }
+
+    public void SetSensitivity(float sensitivity)
+    {
+        mouseSensitivity = sensitivity;
     }
 
     private void OnMovementInput(InputAction.CallbackContext context)

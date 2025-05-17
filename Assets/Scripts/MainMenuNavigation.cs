@@ -17,10 +17,10 @@ public class MainMenuNavigation : MonoBehaviour
     public SliderValueChangedEvent onSliderValueChanged4;
 
     [Header("Slider References")]
-    public Slider slider1;
-    public Slider slider2;
-    public Slider slider3;
-    public Slider slider4;
+    public Slider sliderSens; // Sensitivity
+    public Slider sliderMV; // Master Volume
+    public Slider sliderBMV; // Music Volume
+    public Slider sliderSFXV; // SFX Volume
 
     [Header("Text References")]
     public TextMeshProUGUI sliderValueText1;
@@ -29,9 +29,48 @@ public class MainMenuNavigation : MonoBehaviour
     public TextMeshProUGUI sliderValueText4;
 
     [Header("Slider Value Format")]
-    public string format = "0"; 
+    public string format = "0";
 
     private bool isUpdatingSlider = false;
+
+    void Start()
+    {
+        SaveGameSingleton.Instance.OnSettingsLoaded.AddListener(ApplyLoadedSettings);
+        SaveGameSingleton.Instance.LoadSettings();
+    }
+
+    private void ApplyLoadedSettings(SaveData settings)
+    {
+        Debug.Log($"Loaded settings: Sensitivity={settings.mouseSensitivity}, MasterVol={settings.masterVolume}, MusicVol={settings.musicVolume}, SFXVol={settings.sfxVolume}");
+
+        isUpdatingSlider = true;
+
+        if (sliderSens != null)
+        {
+            sliderSens.value = settings.mouseSensitivity;
+            sliderValueText1.text = settings.mouseSensitivity.ToString(format);
+        }
+
+        if (sliderMV != null)
+        {
+            sliderMV.value = settings.masterVolume;
+            sliderValueText2.text = settings.masterVolume.ToString(format);
+        }
+
+        if (sliderBMV != null)
+        {
+            sliderBMV.value = settings.musicVolume;
+            sliderValueText3.text = settings.musicVolume.ToString(format);
+        }
+
+        if (sliderSFXV != null)
+        {
+            sliderSFXV.value = settings.sfxVolume;
+            sliderValueText4.text = settings.sfxVolume.ToString(format);
+        }
+
+        isUpdatingSlider = false;
+    }
 
     public void PlayGame()
     {
@@ -45,19 +84,14 @@ public class MainMenuNavigation : MonoBehaviour
 
     void Awake()
     {
-        if (slider1 != null)
-            slider1.onValueChanged.AddListener(HandleSlider1ValueChanged);
-        if (slider2 != null)
-            slider2.onValueChanged.AddListener(HandleSlider2ValueChanged);
-        if (slider3 != null)
-            slider3.onValueChanged.AddListener(HandleSlider3ValueChanged);
-        if (slider4 != null)
-            slider4.onValueChanged.AddListener(HandleSlider4ValueChanged);
-
-        if (sliderValueText1 != null) sliderValueText1.text = slider1.value.ToString(format);
-        if (sliderValueText2 != null) sliderValueText2.text = slider2.value.ToString(format);
-        if (sliderValueText3 != null) sliderValueText3.text = slider3.value.ToString(format);
-        if (sliderValueText4 != null) sliderValueText4.text = slider4.value.ToString(format);
+        if (sliderSens != null)
+            sliderSens.onValueChanged.AddListener(HandleSlider1ValueChanged);
+        if (sliderMV != null)
+            sliderMV.onValueChanged.AddListener(HandleSlider2ValueChanged);
+        if (sliderBMV != null)
+            sliderBMV.onValueChanged.AddListener(HandleSlider3ValueChanged);
+        if (sliderSFXV != null)
+            sliderSFXV.onValueChanged.AddListener(HandleSlider4ValueChanged);
     }
 
     private void HandleSlider1ValueChanged(float value)
@@ -66,6 +100,7 @@ public class MainMenuNavigation : MonoBehaviour
 
         isUpdatingSlider = true;
         UpdateSliderText(sliderValueText1, value);
+        SaveGameSingleton.Instance.SetMouseSensitivity(value);
         onSliderValueChanged1?.Invoke(value);
         isUpdatingSlider = false;
     }
@@ -76,6 +111,7 @@ public class MainMenuNavigation : MonoBehaviour
 
         isUpdatingSlider = true;
         UpdateSliderText(sliderValueText2, value);
+        SaveGameSingleton.Instance.SetMasterVolume(value);
         onSliderValueChanged2?.Invoke(value);
         isUpdatingSlider = false;
     }
@@ -86,6 +122,7 @@ public class MainMenuNavigation : MonoBehaviour
 
         isUpdatingSlider = true;
         UpdateSliderText(sliderValueText3, value);
+        SaveGameSingleton.Instance.SetMusicVolume(value);
         onSliderValueChanged3?.Invoke(value);
         isUpdatingSlider = false;
     }
@@ -96,6 +133,7 @@ public class MainMenuNavigation : MonoBehaviour
 
         isUpdatingSlider = true;
         UpdateSliderText(sliderValueText4, value);
+        SaveGameSingleton.Instance.SetSFXVolume(value);
         onSliderValueChanged4?.Invoke(value);
         isUpdatingSlider = false;
     }
