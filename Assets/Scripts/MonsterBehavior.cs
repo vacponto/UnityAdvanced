@@ -51,6 +51,7 @@ public class MonsterBehavior : MonoBehaviour
         UpdateStateMachine();
         UpdateAnimations();
         CheckPathComplete();
+        Debug.DrawLine(transform.position, agent.destination);
     }
 
     void CheckPathComplete()

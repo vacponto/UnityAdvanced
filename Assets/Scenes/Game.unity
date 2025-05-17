@@ -2648,6 +2648,39 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &966819103 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3212086943903526797, guid: 1f004e523a0365d4ebc7e28078779c74,
+    type: 3}
+  m_PrefabInstance: {fileID: 1176523804861574372}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &966819110
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966819103}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &971418570
 GameObject:
   m_ObjectHideFlags: 0
@@ -6098,10 +6131,44 @@ PrefabInstance:
       propertyPath: m_Name
       value: Draenus
       objectReference: {fileID: 0}
+    - target: {fileID: 7604621448479263331, guid: 1f004e523a0365d4ebc7e28078779c74,
+        type: 3}
+      propertyPath: m_Speed
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7604621448479263331, guid: 1f004e523a0365d4ebc7e28078779c74,
+        type: 3}
+      propertyPath: m_Acceleration
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7604621448479263331, guid: 1f004e523a0365d4ebc7e28078779c74,
+        type: 3}
+      propertyPath: m_AngularSpeed
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 7604621448479263331, guid: 1f004e523a0365d4ebc7e28078779c74,
+        type: 3}
+      propertyPath: m_StoppingDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8158372389018120013, guid: 1f004e523a0365d4ebc7e28078779c74,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8447136214474994050, guid: 1f004e523a0365d4ebc7e28078779c74,
+        type: 3}
+      propertyPath: chaseSpeed
+      value: 1.7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3212086943903526797, guid: 1f004e523a0365d4ebc7e28078779c74,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 966819110}
   m_SourcePrefab: {fileID: 100100000, guid: 1f004e523a0365d4ebc7e28078779c74, type: 3}
 --- !u!1001 &3153567680488135007
 PrefabInstance:
