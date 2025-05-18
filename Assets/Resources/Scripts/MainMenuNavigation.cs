@@ -29,7 +29,12 @@ public class MainMenuNavigation : MonoBehaviour
     public TextMeshProUGUI sliderValueText4;
 
     [Header("Slider Value Format")]
-    public string format = "0";
+    public string sensitivityFormat = "0.00"; 
+    public string volumeFormat = "0";
+
+    [Header("Screen Mode Toggle")]
+    public Toggle fullscreenToggle;
+
 
     private bool isUpdatingSlider = false;
 
@@ -37,7 +42,22 @@ public class MainMenuNavigation : MonoBehaviour
     {
         SaveGameSingleton.Instance.OnSettingsLoaded.AddListener(ApplyLoadedSettings);
         SaveGameSingleton.Instance.LoadSettings();
+
+        if (fullscreenToggle != null)
+        {
+            fullscreenToggle.isOn = Screen.fullScreen;
+            fullscreenToggle.onValueChanged.AddListener(OnFullscreenToggleChanged);
+        }
     }
+
+    private void OnFullscreenToggleChanged(bool isFullscreen)
+    {
+        Screen.fullScreen = isFullscreen;
+ 
+        PlayerPrefs.SetInt("FullscreenMode", isFullscreen ? 1 : 0);
+        PlayerPrefs.Save();
+    }
+
 
     private void ApplyLoadedSettings(SaveData settings)
     {
@@ -48,25 +68,30 @@ public class MainMenuNavigation : MonoBehaviour
         if (sliderSens != null)
         {
             sliderSens.value = settings.mouseSensitivity;
-            sliderValueText1.text = settings.mouseSensitivity.ToString(format);
+            sliderValueText1.text = settings.mouseSensitivity.ToString(sensitivityFormat);
         }
 
         if (sliderMV != null)
         {
-            sliderMV.value = settings.masterVolume;
-            sliderValueText2.text = settings.masterVolume.ToString(format);
+            sliderMV.value = settings.masterVolume * 100f;
+            sliderValueText2.text = (settings.masterVolume * 100f).ToString(volumeFormat);
         }
 
         if (sliderBMV != null)
         {
-            sliderBMV.value = settings.musicVolume;
-            sliderValueText3.text = settings.musicVolume.ToString(format);
+            sliderBMV.value = settings.musicVolume * 100f;
+            sliderValueText3.text = (settings.musicVolume * 100f).ToString(volumeFormat);
         }
 
         if (sliderSFXV != null)
         {
-            sliderSFXV.value = settings.sfxVolume;
-            sliderValueText4.text = settings.sfxVolume.ToString(format);
+            sliderSFXV.value = settings.sfxVolume * 100f;
+            sliderValueText4.text = (settings.sfxVolume * 100f).ToString(volumeFormat);
+        }
+
+        if (fullscreenToggle != null)
+        {
+            fullscreenToggle.isOn = Screen.fullScreen;
         }
 
         isUpdatingSlider = false;
@@ -103,6 +128,8 @@ public class MainMenuNavigation : MonoBehaviour
         SaveGameSingleton.Instance.SetMouseSensitivity(value);
         onSliderValueChanged1?.Invoke(value);
         isUpdatingSlider = false;
+
+        //Debug.Log($"Sensitivity Slider Value: {value}, Formatted: {value.ToString(sensitivityFormat)}");
     }
 
     private void HandleSlider2ValueChanged(float value)
@@ -141,6 +168,13 @@ public class MainMenuNavigation : MonoBehaviour
     private void UpdateSliderText(TextMeshProUGUI textComponent, float value)
     {
         if (textComponent != null)
-            textComponent.text = value.ToString(format);
+        {
+            string FormatToUse = (textComponent == sliderValueText1) ? sensitivityFormat : volumeFormat;
+            textComponent.text = value.ToString(FormatToUse);
+        }
+            
+
     }
+
+
 }

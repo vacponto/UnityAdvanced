@@ -10,6 +10,7 @@ public class SaveData
     public float masterVolume = 1f;
     public float musicVolume = 1f;
     public float sfxVolume = 1f;
+    public bool isFullscreen = true;
 }
 
 public class SaveGameSingleton : MonoBehaviour
@@ -28,6 +29,7 @@ public class SaveGameSingleton : MonoBehaviour
                     instance = obj.AddComponent<SaveGameSingleton>();
                     DontDestroyOnLoad(obj);
                     instance.InitializeDefaultValues();
+                    instance.AutoAssignAudioMixer();
                 }
             }
             return instance;
@@ -37,6 +39,29 @@ public class SaveGameSingleton : MonoBehaviour
     public SaveData GameSettings { get; private set; } = new SaveData();
     public AudioMixer audioMixer; 
     public UnityEvent<SaveData> OnSettingsLoaded = new UnityEvent<SaveData>();
+
+    private void Awake()
+    {
+        if (audioMixer == null)
+        {
+            AutoAssignAudioMixer();
+        }
+    }
+
+    private void AutoAssignAudioMixer()
+    {
+        AudioMixer[] mixers = Resources.LoadAll<AudioMixer>("");
+        if (mixers.Length > 0)
+        {
+            audioMixer = mixers[0];
+            Debug.Log($"Auto-assigned AudioMixer: {audioMixer.name}");
+        }
+        else
+        {
+            Debug.LogWarning("No AudioMixer found in Resources. Volume controls will not work.");
+        }
+    }
+
 
     private void InitializeDefaultValues()
     {
@@ -114,5 +139,23 @@ public class SaveGameSingleton : MonoBehaviour
     private float LinearToDecibel(float linear)
     {
         return linear != 0 ? 20f * Mathf.Log10(linear) : -80f;
+    }
+
+    public void SetFullscreen(bool isFullscreen)
+    {
+        GameSettings.isFullscreen = isFullscreen;
+        Screen.fullScreen = isFullscreen;
+        SaveSettings();
+    }
+
+    public bool GetFullscreen()
+    {
+        return GameSettings.isFullscreen;
+    }
+
+    private void OnFullscreenToggleChanged(bool isFullscreen)
+    {
+        Screen.fullScreen = isFullscreen;
+        SaveGameSingleton.Instance.SetFullscreen(isFullscreen);
     }
 }
