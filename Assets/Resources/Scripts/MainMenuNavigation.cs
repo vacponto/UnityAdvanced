@@ -38,9 +38,23 @@ public class MainMenuNavigation : MonoBehaviour
 
     private bool isUpdatingSlider = false;
 
+    void Awake()
+    {
+        if (sliderSens != null)
+            sliderSens.onValueChanged.AddListener(HandleSlider1ValueChanged);
+        if (sliderMV != null)
+            sliderMV.onValueChanged.AddListener(HandleSlider2ValueChanged);
+        if (sliderBMV != null)
+            sliderBMV.onValueChanged.AddListener(HandleSlider3ValueChanged);
+        if (sliderSFXV != null)
+            sliderSFXV.onValueChanged.AddListener(HandleSlider4ValueChanged);
+
+        SaveGameSingleton.Instance.OnSettingsLoaded.AddListener(ApplyLoadedSettings);
+
+    }
+
     void Start()
     {
-        SaveGameSingleton.Instance.OnSettingsLoaded.AddListener(ApplyLoadedSettings);
         SaveGameSingleton.Instance.LoadSettings();
 
         if (fullscreenToggle != null)
@@ -53,9 +67,7 @@ public class MainMenuNavigation : MonoBehaviour
     private void OnFullscreenToggleChanged(bool isFullscreen)
     {
         Screen.fullScreen = isFullscreen;
- 
-        PlayerPrefs.SetInt("FullscreenMode", isFullscreen ? 1 : 0);
-        PlayerPrefs.Save();
+        SaveGameSingleton.Instance.SetFullscreen(isFullscreen);
     }
 
 
@@ -91,6 +103,7 @@ public class MainMenuNavigation : MonoBehaviour
 
         if (fullscreenToggle != null)
         {
+            Screen.fullScreen = settings.isFullscreen;
             fullscreenToggle.isOn = Screen.fullScreen;
         }
 
@@ -107,17 +120,7 @@ public class MainMenuNavigation : MonoBehaviour
         Application.Quit();
     }
 
-    void Awake()
-    {
-        if (sliderSens != null)
-            sliderSens.onValueChanged.AddListener(HandleSlider1ValueChanged);
-        if (sliderMV != null)
-            sliderMV.onValueChanged.AddListener(HandleSlider2ValueChanged);
-        if (sliderBMV != null)
-            sliderBMV.onValueChanged.AddListener(HandleSlider3ValueChanged);
-        if (sliderSFXV != null)
-            sliderSFXV.onValueChanged.AddListener(HandleSlider4ValueChanged);
-    }
+   
 
     private void HandleSlider1ValueChanged(float value)
     {
