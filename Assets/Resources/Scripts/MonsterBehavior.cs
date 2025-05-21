@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using UnityEngine.Playables;
 
 public enum MonsterState { Idle, Detect, Chase }
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(AudioSource))]
 public class MonsterBehavior : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -20,17 +22,25 @@ public class MonsterBehavior : MonoBehaviour
     [SerializeField] private float fieldOfView = 90f;
     [SerializeField] private LayerMask obstructionLayers;
     [SerializeField] private float detectDuration = 1.5f;
-    [SerializeField] private float losePlayerTimeout = 3f;
 
     [Header("Idle Settings")]
     [SerializeField] private float idleWanderRadius = 3f;
     [SerializeField] private float idleWanderInterval = 3f;
-    [SerializeField] private float idleSpinSpeed = 30f; // Degrees per second
-    [SerializeField] private float idleSpinAngle = 45f; // How much to spin left/right
+    [SerializeField] private float idleSpinAngle = 45f;
+
+    [Header("Sound Settings")]
+    [SerializeField] private AudioClip[] idleSounds;
+    [SerializeField] private AudioClip detectionSound;
+    [SerializeField] private float minIdleSoundDelay = 5f;
+    [SerializeField] private float maxIdleSoundDelay = 15f;
+
+    [Header("Cutscene Settings")]
+    [SerializeField] private PlayableDirector cutsceneDirector;
 
     private NavMeshAgent agent;
     private Transform player;
     private Animator animator;
+    private AudioSource audioSource;
     private MonsterState currentState = MonsterState.Idle;
     private Vector3 lastKnownPlayerPosition;
     private float stateTimeElapsed;
@@ -39,15 +49,20 @@ public class MonsterBehavior : MonoBehaviour
     private Coroutine lookAroundCoroutine;
     private bool isSpinning;
     private float originalYRotation;
+    private float nextIdleSoundTime;
+    private bool hasPlayedDetectionSound;
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         originalYRotation = transform.eulerAngles.y;
+        hasPlayedDetectionSound = false;
 
         ConfigureAgent();
+        ScheduleNextIdleSound();
     }
 
     void ConfigureAgent()
@@ -64,6 +79,7 @@ public class MonsterBehavior : MonoBehaviour
         UpdateStateMachine();
         UpdateAnimations();
         CheckPathComplete();
+        CheckIdleSounds();
         Debug.DrawLine(transform.position, agent.destination);
     }
 
@@ -100,14 +116,12 @@ public class MonsterBehavior : MonoBehaviour
         agent.speed = idleSpeed;
         agent.isStopped = false;
 
-        // Wandering behavior
         if (Time.time >= nextWanderTime && !isSpinning)
         {
             WanderToNewPosition();
             nextWanderTime = Time.time + idleWanderInterval;
         }
 
-        // Spin/look around behavior when not moving
         if (hasReachedDestination && !isSpinning)
         {
             if (lookAroundCoroutine != null)
@@ -117,7 +131,6 @@ public class MonsterBehavior : MonoBehaviour
             lookAroundCoroutine = StartCoroutine(IdleLookAround());
         }
 
-        // Transition to Detect if player is seen
         if (PlayerDetected())
         {
             if (lookAroundCoroutine != null)
@@ -155,7 +168,6 @@ public class MonsterBehavior : MonoBehaviour
             float currentRotation = Mathf.Lerp(startRotation, targetRotation, t);
             transform.rotation = Quaternion.Euler(0, currentRotation, 0);
 
-            // Check for player detection while looking around
             if (PlayerDetected())
             {
                 isSpinning = false;
@@ -166,7 +178,6 @@ public class MonsterBehavior : MonoBehaviour
             yield return null;
         }
 
-        // Return to original rotation
         lookTime = 0f;
         startRotation = transform.eulerAngles.y;
 
@@ -199,7 +210,6 @@ public class MonsterBehavior : MonoBehaviour
 
     void HandleChaseState()
     {
-        // Only chase while player is in sight
         if (!PlayerDetected())
         {
             ChangeState(MonsterState.Idle);
@@ -208,8 +218,6 @@ public class MonsterBehavior : MonoBehaviour
 
         agent.speed = chaseSpeed;
         agent.isStopped = false;
-
-        // Continuously update destination and face player
         lastKnownPlayerPosition = player.position;
         agent.SetDestination(lastKnownPlayerPosition);
         FacePlayer();
@@ -251,8 +259,60 @@ public class MonsterBehavior : MonoBehaviour
 
     void ChangeState(MonsterState newState)
     {
+        if (currentState == MonsterState.Detect && newState != MonsterState.Detect)
+        {
+            hasPlayedDetectionSound = false;
+        }
+
+        if (newState == MonsterState.Detect && !hasPlayedDetectionSound)
+        {
+            PlayDetectionSound();
+            hasPlayedDetectionSound = true;
+        }
+
         currentState = newState;
         stateTimeElapsed = 0f;
+    }
+
+    void CheckIdleSounds()
+    {
+        if (currentState == MonsterState.Idle && Time.time >= nextIdleSoundTime)
+        {
+            PlayRandomIdleSound();
+            ScheduleNextIdleSound();
+        }
+    }
+
+    void ScheduleNextIdleSound()
+    {
+        nextIdleSoundTime = Time.time + Random.Range(minIdleSoundDelay, maxIdleSoundDelay);
+    }
+
+    void PlayRandomIdleSound()
+    {
+        if (idleSounds.Length > 0 && audioSource != null)
+        {
+            AudioClip clip = idleSounds[Random.Range(0, idleSounds.Length)];
+            audioSource.PlayOneShot(clip);
+        }
+    }
+
+    void PlayDetectionSound()
+    {
+        if (detectionSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(detectionSound);
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && cutsceneDirector != null)
+        {
+            cutsceneDirector.Play();
+            this.enabled = false;
+            agent.isStopped = true;
+        }
     }
 
     void OnDrawGizmosSelected()
@@ -267,7 +327,6 @@ public class MonsterBehavior : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + fovLine1);
         Gizmos.DrawLine(transform.position, transform.position + fovLine2);
 
-        // Draw idle wander radius
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, idleWanderRadius);
     }
