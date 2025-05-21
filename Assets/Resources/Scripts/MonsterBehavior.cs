@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 public enum MonsterState { Idle, Detect, Chase }
 
@@ -9,6 +10,7 @@ public class MonsterBehavior : MonoBehaviour
 {
     [Header("Movement Settings")]
     [SerializeField] private float chaseSpeed = 3.5f;
+    [SerializeField] private float idleSpeed = 1f;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private float acceleration = 8f;
     [SerializeField] private float stoppingDistance = 1.5f;
@@ -20,6 +22,12 @@ public class MonsterBehavior : MonoBehaviour
     [SerializeField] private float detectDuration = 1.5f;
     [SerializeField] private float losePlayerTimeout = 3f;
 
+    [Header("Idle Settings")]
+    [SerializeField] private float idleWanderRadius = 3f;
+    [SerializeField] private float idleWanderInterval = 3f;
+    [SerializeField] private float idleSpinSpeed = 30f; // Degrees per second
+    [SerializeField] private float idleSpinAngle = 45f; // How much to spin left/right
+
     private NavMeshAgent agent;
     private Transform player;
     private Animator animator;
@@ -27,12 +35,17 @@ public class MonsterBehavior : MonoBehaviour
     private Vector3 lastKnownPlayerPosition;
     private float stateTimeElapsed;
     private bool hasReachedDestination;
+    private float nextWanderTime;
+    private Coroutine lookAroundCoroutine;
+    private bool isSpinning;
+    private float originalYRotation;
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        originalYRotation = transform.eulerAngles.y;
 
         ConfigureAgent();
     }
@@ -84,11 +97,89 @@ public class MonsterBehavior : MonoBehaviour
 
     void HandleIdleState()
     {
-        agent.isStopped = true;
+        agent.speed = idleSpeed;
+        agent.isStopped = false;
+
+        // Wandering behavior
+        if (Time.time >= nextWanderTime && !isSpinning)
+        {
+            WanderToNewPosition();
+            nextWanderTime = Time.time + idleWanderInterval;
+        }
+
+        // Spin/look around behavior when not moving
+        if (hasReachedDestination && !isSpinning)
+        {
+            if (lookAroundCoroutine != null)
+            {
+                StopCoroutine(lookAroundCoroutine);
+            }
+            lookAroundCoroutine = StartCoroutine(IdleLookAround());
+        }
+
+        // Transition to Detect if player is seen
         if (PlayerDetected())
         {
+            if (lookAroundCoroutine != null)
+            {
+                StopCoroutine(lookAroundCoroutine);
+                isSpinning = false;
+            }
             ChangeState(MonsterState.Detect);
         }
+    }
+
+    void WanderToNewPosition()
+    {
+        Vector3 randomDirection = Random.insideUnitSphere * idleWanderRadius;
+        randomDirection += transform.position;
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(randomDirection, out hit, idleWanderRadius, NavMesh.AllAreas))
+        {
+            agent.SetDestination(hit.position);
+        }
+    }
+
+    IEnumerator IdleLookAround()
+    {
+        isSpinning = true;
+        float lookDuration = 2f;
+        float lookTime = 0f;
+        float startRotation = transform.eulerAngles.y;
+        float targetRotation = startRotation + Random.Range(-idleSpinAngle, idleSpinAngle);
+
+        while (lookTime < lookDuration)
+        {
+            lookTime += Time.deltaTime;
+            float t = lookTime / lookDuration;
+            float currentRotation = Mathf.Lerp(startRotation, targetRotation, t);
+            transform.rotation = Quaternion.Euler(0, currentRotation, 0);
+
+            // Check for player detection while looking around
+            if (PlayerDetected())
+            {
+                isSpinning = false;
+                ChangeState(MonsterState.Detect);
+                yield break;
+            }
+
+            yield return null;
+        }
+
+        // Return to original rotation
+        lookTime = 0f;
+        startRotation = transform.eulerAngles.y;
+
+        while (lookTime < lookDuration / 2)
+        {
+            lookTime += Time.deltaTime;
+            float t = lookTime / (lookDuration / 2);
+            float currentRotation = Mathf.Lerp(startRotation, originalYRotation, t);
+            transform.rotation = Quaternion.Euler(0, currentRotation, 0);
+            yield return null;
+        }
+
+        isSpinning = false;
     }
 
     void HandleDetectState()
@@ -96,7 +187,7 @@ public class MonsterBehavior : MonoBehaviour
         agent.isStopped = true;
         FacePlayer();
 
-        if (stateTimeElapsed > detectDuration)
+        if (stateTimeElapsed > detectDuration && PlayerDetected())
         {
             ChangeState(MonsterState.Chase);
         }
@@ -108,17 +199,20 @@ public class MonsterBehavior : MonoBehaviour
 
     void HandleChaseState()
     {
-        agent.isStopped = false;
-
-        if (PlayerDetected())
-        {
-            lastKnownPlayerPosition = player.position;
-            agent.SetDestination(lastKnownPlayerPosition);
-        }
-        else if (hasReachedDestination || stateTimeElapsed > losePlayerTimeout)
+        // Only chase while player is in sight
+        if (!PlayerDetected())
         {
             ChangeState(MonsterState.Idle);
+            return;
         }
+
+        agent.speed = chaseSpeed;
+        agent.isStopped = false;
+
+        // Continuously update destination and face player
+        lastKnownPlayerPosition = player.position;
+        agent.SetDestination(lastKnownPlayerPosition);
+        FacePlayer();
     }
 
     bool PlayerDetected()
@@ -172,5 +266,9 @@ public class MonsterBehavior : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(transform.position, transform.position + fovLine1);
         Gizmos.DrawLine(transform.position, transform.position + fovLine2);
+
+        // Draw idle wander radius
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, idleWanderRadius);
     }
 }

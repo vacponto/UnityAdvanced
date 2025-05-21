@@ -11,32 +11,32 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 26dedb684e1078d45b3599825effd9a2,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.35
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dedb684e1078d45b3599825effd9a2,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.35
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dedb684e1078d45b3599825effd9a2,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.35
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dedb684e1078d45b3599825effd9a2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 21.9
+      value: 23.51
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dedb684e1078d45b3599825effd9a2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.654981
+      value: 3.19
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dedb684e1078d45b3599825effd9a2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -30.16
+      value: -24.09
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dedb684e1078d45b3599825effd9a2,
         type: 3}
@@ -46,7 +46,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 26dedb684e1078d45b3599825effd9a2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dedb684e1078d45b3599825effd9a2,
         type: 3}
@@ -56,7 +56,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 26dedb684e1078d45b3599825effd9a2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dedb684e1078d45b3599825effd9a2,
         type: 3}
@@ -172,7 +172,7 @@ MonoBehaviour:
   fieldOfView: 120
   obstructionLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1536
   detectDuration: 1.5
   losePlayerTimeout: 3
 --- !u!136 &2206943260977246059
@@ -195,9 +195,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.75
-  m_Height: 6
+  m_Height: 4.4545364
   m_Direction: 1
-  m_Center: {x: 0, y: 3.7, z: 0}
+  m_Center: {x: 0, y: 2.2120817, z: 0}
 --- !u!54 &5787698082372984144
 Rigidbody:
   m_ObjectHideFlags: 0
