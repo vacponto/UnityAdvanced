@@ -29,6 +29,7 @@ public class GrabbableItem : MonoBehaviour, IInteractable
     {
         if (!outline.enabled)
         {
+            
             outline.enabled = true; 
         }
     }
@@ -57,10 +58,10 @@ public class GrabbableItem : MonoBehaviour, IInteractable
     {
         isGrabbed = true;
         transform.SetParent(grabPosition);
-        transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
+        transform.localRotation = Quaternion.Euler(-90f, -90f, 0f);
         transform.localPosition = Vector3.zero;
         GetComponent<Rigidbody>().isKinematic = true;
-        GetComponent<Collider>().enabled = false;
+
     }
 
     private void ReleaseItem()
