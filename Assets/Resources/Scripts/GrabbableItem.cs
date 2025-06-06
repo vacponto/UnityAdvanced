@@ -61,7 +61,7 @@ public class GrabbableItem : MonoBehaviour, IInteractable
         transform.localRotation = Quaternion.Euler(-90f, -90f, 0f);
         transform.localPosition = Vector3.zero;
         GetComponent<Rigidbody>().isKinematic = true;
-
+        gameObject.layer = LayerMask.NameToLayer("ItemInHand");
     }
 
     private void ReleaseItem()
