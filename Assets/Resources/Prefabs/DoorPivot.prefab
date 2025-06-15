@@ -125,6 +125,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doorAnimator: {fileID: 8955957857879834108}
+  openAngle: 90
+  closeAngle: 0
+  animationSpeed: 1
+  clockwiseOpen: 1
 --- !u!1 &5207911508928603763
 GameObject:
   m_ObjectHideFlags: 0
