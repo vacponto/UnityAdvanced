@@ -22,6 +22,7 @@ public class IllusionTrigger : MonoBehaviour
         {
             TeleportPlayer();
             Destroy(other.gameObject,3); 
+            this.enabled = false;
         }
     }
 
